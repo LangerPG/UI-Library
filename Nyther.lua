@@ -1529,6 +1529,23 @@ local function NewColorPicker(parent, label, sub, defaultColor, callback, iconNa
 
     local dragSq, dragHue = false, false
 
+    local function findScrollingFrame(obj)
+        local cur = obj
+        while cur do
+            if cur:IsA("ScrollingFrame") then return cur end
+            cur = cur.Parent
+        end
+        return nil
+    end
+    local parentScroll = findScrollingFrame(parent)
+
+    local function lockScroll()
+        if parentScroll then parentScroll.ScrollingEnabled = false end
+    end
+    local function unlockScroll()
+        if parentScroll then parentScroll.ScrollingEnabled = true end
+    end
+
     local function isTouchOrMouse1(inp)
         return inp.UserInputType == Enum.UserInputType.MouseButton1
             or inp.UserInputType == Enum.UserInputType.Touch
@@ -1541,17 +1558,19 @@ local function NewColorPicker(parent, label, sub, defaultColor, callback, iconNa
 
     sqBtn.InputBegan:Connect(function(inp)
         if isTouchOrMouse1(inp) then
-            dragSq = true; updateFromSquare(inp.Position.X, inp.Position.Y)
+            dragSq = true
+            lockScroll()
+            updateFromSquare(inp.Position.X, inp.Position.Y)
         end
     end)
 
     hueBtn.InputBegan:Connect(function(inp)
         if isTouchOrMouse1(inp) then
-            dragHue = true; updateFromHue(inp.Position.Y)
+            dragHue = true
+            lockScroll()
+            updateFromHue(inp.Position.Y)
         end
     end)
-
-    -- Touch: también actualizar si el dedo se mueve sobre el square/hueBar directamente
     sqBtn.InputChanged:Connect(function(inp)
         if inp.UserInputType == Enum.UserInputType.Touch and dragSq then
             updateFromSquare(inp.Position.X, inp.Position.Y)
@@ -1573,6 +1592,7 @@ local function NewColorPicker(parent, label, sub, defaultColor, callback, iconNa
     UserInputService.InputEnded:Connect(function(inp)
         if isTouchOrMouse1(inp) then
             dragSq = false; dragHue = false
+            unlockScroll()
         end
     end)
 
