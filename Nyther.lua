@@ -2345,19 +2345,6 @@ local function NewBodyPartSelector(parent, label, sub, selectedParts, allParts, 
     return container
 end
 
--- ══════════════════════════════════════════════════════
---  createFloatButton  –  Botón flotante genérico Nyther
---  Parámetros:
---    config = {
---      name        : string   – nombre interno del ScreenGui
---      icon        : string   – nombre de icono Lucide (ej. "crosshair", "eye")
---      position    : UDim2    – posición inicial  (default: esquina derecha abajo)
---      displayOrder: number   – ZIndex del ScreenGui (default 997)
---      onToggle    : function(isActive: bool)  – se llama al hacer click
---      defaultActive: bool   – estado inicial del borde (verde/rojo)
---    }
---  Retorna: { destroy, setActive, setFixed, setHidden }
--- ══════════════════════════════════════════════════════
 local function createFloatButton(config)
     config = config or {}
 
@@ -2401,7 +2388,6 @@ local function createFloatButton(config)
     stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     stroke.Parent          = btn
 
-    -- Icono Lucide
     local iconObj = nil
     local lucideAsset = getLucideAsset(iconName)
     if lucideAsset then
@@ -2419,7 +2405,6 @@ local function createFloatButton(config)
         img.Parent                 = btn
         iconObj = img
     else
-        -- Fallback: texto si no carga Lucide
         local lbl = Instance.new("TextLabel")
         lbl.Name                   = "Icon"
         lbl.Size                   = UDim2.new(1, 0, 1, 0)
@@ -2435,7 +2420,6 @@ local function createFloatButton(config)
         iconObj = lbl
     end
 
-    -- Drag
     local dragging, dragStart, startBtnPos = false, nil, nil
     btn.InputBegan:Connect(function(inp)
         if isFixed then return end
@@ -2464,12 +2448,10 @@ local function createFloatButton(config)
         end
     end)
 
-    -- Click – toggle
     btn.MouseButton1Click:Connect(function()
         isActive = not isActive
         local nc = isActive and colorOn or colorOff
         TweenService:Create(stroke, TweenInfo.new(0.25), {Color = nc}):Play()
-        -- Bounce
         local grow = TweenService:Create(btn,
             TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
             {Size = UDim2.new(0, 62, 0, 62)})
@@ -2479,7 +2461,6 @@ local function createFloatButton(config)
                 TweenInfo.new(0.2, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out),
                 {Size = UDim2.new(0, 52, 0, 52)}):Play()
         end)
-        -- Girar icono
         if iconObj then
             TweenService:Create(iconObj, TweenInfo.new(0.25), {Rotation = iconObj.Rotation + 180}):Play()
         end
@@ -2488,7 +2469,6 @@ local function createFloatButton(config)
 
     sg.Parent = game:GetService("CoreGui")
 
-    -- API pública del botón
     local function setActive(v)
         isActive = v
         local nc = v and colorOn or colorOff
