@@ -2456,14 +2456,13 @@ local function createFloatButton(config)
             TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
             {Size = UDim2.new(0, 62, 0, 62)})
         grow:Play()
-        grow.Completed:Connect(function()
+        local conn
+        conn = grow.Completed:Connect(function()
+            conn:Disconnect()
             TweenService:Create(btn,
                 TweenInfo.new(0.2, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out),
                 {Size = UDim2.new(0, 52, 0, 52)}):Play()
         end)
-        if iconObj then
-            iconObj.Rotation = 0
-        end
         if onToggle then onToggle(isActive) end
     end)
 
