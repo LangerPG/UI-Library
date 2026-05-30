@@ -2462,7 +2462,7 @@ local function createFloatButton(config)
                 {Size = UDim2.new(0, 52, 0, 52)}):Play()
         end)
         if iconObj then
-            TweenService:Create(iconObj, TweenInfo.new(0.25), {Rotation = iconObj.Rotation + 180}):Play()
+            iconObj.Rotation = 0
         end
         if onToggle then onToggle(isActive) end
     end)
