@@ -2465,12 +2465,19 @@ local function createFloatButton(config)
         end)
         if iconObj then
             iconObj.Rotation = 0
-            local spinConn
-            local spin = TweenService:Create(iconObj, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 360})
-            spin:Play()
-            spinConn = spin.Completed:Connect(function()
-                spinConn:Disconnect()
-                iconObj.Rotation = 0
+            local spin1 = TweenService:Create(iconObj, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Rotation = 180})
+            spin1:Play()
+            local c1
+            c1 = spin1.Completed:Connect(function()
+                c1:Disconnect()
+                iconObj.Rotation = 180
+                local spin2 = TweenService:Create(iconObj, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Rotation = 360})
+                spin2:Play()
+                local c2
+                c2 = spin2.Completed:Connect(function()
+                    c2:Disconnect()
+                    iconObj.Rotation = 0
+                end)
             end)
         end
         if onToggle then onToggle(isActive) end
