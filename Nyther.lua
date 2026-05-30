@@ -2466,7 +2466,7 @@ local function createFloatButton(config)
         if iconObj then
             iconObj.Rotation = 0
             local spinConn
-            local spin = TweenService:Create(iconObj, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180})
+            local spin = TweenService:Create(iconObj, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 360})
             spin:Play()
             spinConn = spin.Completed:Connect(function()
                 spinConn:Disconnect()
